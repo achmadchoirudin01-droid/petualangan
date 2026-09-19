@@ -36,6 +36,14 @@ background:linear-gradient(#69c9ff 0 32%,#2c9b55 33% 53%,#154a2d 54%);box-shadow
 .card h2{margin-top:0;color:#ffd76a}.answers{display:grid;gap:10px;margin-top:18px}.answers button,.close{padding:13px;border:0;border-radius:12px;background:#244d3d;color:#fff;font-size:16px;cursor:pointer}.answers button:hover{background:#35745a}.close{margin-top:15px;background:#704c25}
 #feedback{min-height:28px;margin-top:15px;font-weight:bold}
 .progress{height:12px;background:#17342b;border-radius:10px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:#e3b743;transition:.3s}
+
+.c6{left:12%;bottom:320px}.c7{left:35%;bottom:335px}.c8{left:68%;bottom:300px}
+.c9{left:83%;bottom:235px}.c10{left:54%;bottom:350px}.c11{left:24%;bottom:70px}
+.c12{left:38%;bottom:60px}.c13{left:63%;bottom:60px}.c14{left:88%;bottom:170px}
+.c15{left:3%;bottom:225px}.c16{left:17%;bottom:420px}.c17{left:43%;bottom:420px}
+.c18{left:57%;bottom:430px}.c19{left:73%;bottom:410px}.c20{left:91%;bottom:350px}
+.c21{left:31%;bottom:180px}.c22{left:70%;bottom:180px}.c23{left:47%;bottom:240px}
+
 @media(max-width:700px){.world{height:540px}.player{left:43%}.river{left:35%;width:45%}.c5{left:25%;bottom:260px}.chest{width:70px;height:55px}.chest:after{left:22px;top:12px}.location{font-size:12px}.tree{transform:scale(.7)}}
 </style>
 </head>
@@ -56,6 +64,24 @@ background:linear-gradient(#69c9ff 0 32%,#2c9b55 33% 53%,#154a2d 54%);box-shadow
     <button class="chest c3" onclick="openChest(2)" aria-label="Harta karun 3"></button>
     <button class="chest c4" onclick="openChest(3)" aria-label="Harta karun 4"></button>
     <button class="chest c5" onclick="openChest(4)" aria-label="Harta karun 5"></button>
+    <button class="chest c6" onclick="openChest(5)" aria-label="Harta karun 6"></button>
+    <button class="chest c7" onclick="openChest(6)" aria-label="Harta karun 7"></button>
+    <button class="chest c8" onclick="openChest(7)" aria-label="Harta karun 8"></button>
+    <button class="chest c9" onclick="openChest(8)" aria-label="Harta karun 9"></button>
+    <button class="chest c10" onclick="openChest(9)" aria-label="Harta karun 10"></button>
+    <button class="chest c11" onclick="openChest(10)" aria-label="Harta karun 11"></button>
+    <button class="chest c12" onclick="openChest(11)" aria-label="Harta karun 12"></button>
+    <button class="chest c13" onclick="openChest(12)" aria-label="Harta karun 13"></button>
+    <button class="chest c14" onclick="openChest(13)" aria-label="Harta karun 14"></button>
+    <button class="chest c15" onclick="openChest(14)" aria-label="Harta karun 15"></button>
+    <button class="chest c16" onclick="openChest(15)" aria-label="Harta karun 16"></button>
+    <button class="chest c17" onclick="openChest(16)" aria-label="Harta karun 17"></button>
+    <button class="chest c18" onclick="openChest(17)" aria-label="Harta karun 18"></button>
+    <button class="chest c19" onclick="openChest(18)" aria-label="Harta karun 19"></button>
+    <button class="chest c20" onclick="openChest(19)" aria-label="Harta karun 20"></button>
+    <button class="chest c21" onclick="openChest(20)" aria-label="Harta karun 21"></button>
+    <button class="chest c22" onclick="openChest(21)" aria-label="Harta karun 22"></button>
+    <button class="chest c23" onclick="openChest(22)" aria-label="Harta karun 23"></button>
   </div>
   <div class="info">🎯 Klik peti harta karun untuk menjawab soal keamanan jaringan. Jawaban benar membuka harta dan menambah skor.</div>
   <div class="progress"><div class="bar" id="bar"></div></div>
@@ -102,7 +128,7 @@ let current=null, score=0, found=0, lives=5, opened=new Set();
 
 function openChest(i){
   if(opened.has(i)) return;
-  current=i; const q=questions[i*5 % questions.length]; // setiap peti membuka salah satu materi; lanjut bisa ditambah
+  current=i; const q=questions[i % questions.length];
   showQuestion(q,i);
 }
 function showQuestion(q,i){
@@ -116,7 +142,7 @@ function showQuestion(q,i){
  }
 }
 function answer(choice,q,i){
- if(choice===q[5]){
+ if(choice===q[6]){
    score+=100; found++; opened.add(i);
    document.getElementById("feedback").textContent="✅ Benar! Harta karun berhasil ditemukan.";
    document.getElementById("feedback").style.color="#8df0a6";
