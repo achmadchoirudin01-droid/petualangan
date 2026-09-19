@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petualangan Harta Karun Digital</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#071b16;color:#fff;overflow-x:hidden}
+header{padding:18px 24px;background:linear-gradient(135deg,#123d2c,#0a211b);border-bottom:3px solid #d7a73b;display:flex;justify-content:space-between;gap:15px;align-items:center}
+h1{margin:0;font-size:clamp(22px,4vw,38px);text-shadow:3px 4px 0 #000}
+.stats{display:flex;gap:12px;flex-wrap:wrap}.badge{padding:9px 14px;border-radius:20px;background:#182d28;border:1px solid #d7a73b}
+#game{max-width:1300px;margin:auto;padding:20px}
+.world{height:620px;position:relative;border-radius:25px;overflow:hidden;perspective:900px;
+background:linear-gradient(#69c9ff 0 32%,#2c9b55 33% 53%,#154a2d 54%);box-shadow:0 15px 45px #0008}
+.sun{position:absolute;width:110px;height:110px;border-radius:50%;background:#ffe48b;right:8%;top:7%;box-shadow:0 0 60px #fff5}
+.mountain{position:absolute;bottom:270px;width:0;height:0;border-left:220px solid transparent;border-right:220px solid transparent;border-bottom:250px solid #326b4a;opacity:.9}
+.m1{left:3%}.m2{left:38%;transform:scale(1.25)}.m3{right:-5%;transform:scale(.9)}
+.fog{position:absolute;bottom:255px;width:100%;height:90px;background:linear-gradient(transparent,#ffffff35,transparent);filter:blur(10px)}
+.river{position:absolute;left:39%;bottom:-50px;width:34%;height:390px;background:linear-gradient(90deg,#0b6874,#31bdd0,#075b6a);clip-path:polygon(30% 0,70% 0,100% 100%,0 100%);transform:rotateX(3deg);box-shadow:inset 0 0 35px #022b38}
+.cave{position:absolute;left:8%;bottom:80px;width:220px;height:180px;background:#17120f;border-radius:50% 50% 10px 10px;box-shadow:inset 0 0 45px #000; border:8px solid #4d3929}
+.tree{position:absolute;bottom:120px;width:55px;height:330px;background:#3c2819;border-radius:25px;transform:rotate(-4deg);box-shadow:80px 50px 0 -10px #3c2819,-80px 90px 0 -7px #3c2819}
+.tree:before,.tree:after{content:"";position:absolute;width:210px;height:130px;background:#146b37;border-radius:50%;left:-80px;top:-50px;box-shadow:100px 30px 0 #0e5a30,-50px 80px 0 #19753d}
+.t1{left:3%}.t2{right:5%;transform:rotate(5deg)}
+.player{position:absolute;z-index:8;left:45%;bottom:105px;width:70px;height:125px;filter:drop-shadow(8px 12px 4px #0008);animation:walk 1.5s infinite ease-in-out}
+.player .head{width:43px;height:43px;background:#b87545;border-radius:50%;margin:auto;border:4px solid #382518}
+.player .hat{width:62px;height:17px;background:#56351f;border-radius:50%;margin-top:-3px;margin-left:4px}.player .body{width:50px;height:58px;background:#7a6744;margin:auto;border-radius:12px}.player .legs{width:50px;height:40px;margin:auto;background:linear-gradient(90deg,#3c3425 47%,transparent 47% 53%,#3c3425 53%);border-radius:8px}
+@keyframes walk{50%{transform:translateY(-7px) rotate(1deg)}}
+.chest{position:absolute;z-index:9;width:86px;height:65px;background:linear-gradient(#d59635,#74441d);border:5px solid #f2c35d;border-radius:10px;cursor:pointer;transform:rotateX(8deg);box-shadow:0 12px 12px #0008;transition:.2s}
+.chest:hover{transform:translateY(-9px) scale(1.08)}.chest:after{content:"🔒";position:absolute;left:30px;top:18px;font-size:25px}
+.c1{left:19%;bottom:155px}.c2{left:58%;bottom:185px}.c3{left:76%;bottom:105px}.c4{left:49%;bottom:85px}.c5{left:29%;bottom:270px}
+.location{position:absolute;z-index:10;padding:8px 12px;background:#101b18dd;border:2px solid #e6bc54;border-radius:12px;font-weight:bold}
+.lj{left:5%;top:40%}.ls{left:51%;top:38%}.lg{left:9%;bottom:28px}.lo{right:5%;bottom:25px}
+.info{margin-top:15px;background:#0c211b;border:1px solid #bd8f2f;border-radius:15px;padding:14px;text-align:center}
+#modal{display:none;position:fixed;inset:0;background:#000b;z-index:50;align-items:center;justify-content:center;padding:20px}
+.card{max-width:650px;width:100%;background:linear-gradient(145deg,#173d31,#0b211b);border:3px solid #d8ad4c;border-radius:22px;padding:25px;box-shadow:0 25px 70px #000}
+.card h2{margin-top:0;color:#ffd76a}.answers{display:grid;gap:10px;margin-top:18px}.answers button,.close{padding:13px;border:0;border-radius:12px;background:#244d3d;color:#fff;font-size:16px;cursor:pointer}.answers button:hover{background:#35745a}.close{margin-top:15px;background:#704c25}
+#feedback{min-height:28px;margin-top:15px;font-weight:bold}
+.progress{height:12px;background:#17342b;border-radius:10px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:#e3b743;transition:.3s}
+@media(max-width:700px){.world{height:540px}.player{left:43%}.river{left:35%;width:45%}.c5{left:25%;bottom:260px}.chest{width:70px;height:55px}.chest:after{left:22px;top:12px}.location{font-size:12px}.tree{transform:scale(.7)}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🗺️ Petualangan Harta Karun Digital</h1>
+  <div class="stats"><span class="badge">❤️ <b id="lives">5</b></span><span class="badge">⭐ Skor: <b id="score">0</b></span><span class="badge">💎 <b id="found">0</b>/23</span></div>
+</header>
+
+<div id="game">
+  <div class="world">
+    <div class="sun"></div><div class="mountain m1"></div><div class="mountain m2"></div><div class="mountain m3"></div><div class="fog"></div>
+    <div class="river"></div><div class="cave"></div><div class="tree t1"></div><div class="tree t2"></div>
+    <div class="location lj">🌿 HUTAN AMAZON</div><div class="location ls">🌊 SUNGAI AMAZON</div><div class="location lg">🕳️ GUA MISTERI</div><div class="location lo">🐠 LAUTAN</div>
+    <div class="player"><div class="hat"></div><div class="head"></div><div class="body"></div><div class="legs"></div></div>
+    <button class="chest c1" onclick="openChest(0)" aria-label="Harta karun 1"></button>
+    <button class="chest c2" onclick="openChest(1)" aria-label="Harta karun 2"></button>
+    <button class="chest c3" onclick="openChest(2)" aria-label="Harta karun 3"></button>
+    <button class="chest c4" onclick="openChest(3)" aria-label="Harta karun 4"></button>
+    <button class="chest c5" onclick="openChest(4)" aria-label="Harta karun 5"></button>
+  </div>
+  <div class="info">🎯 Klik peti harta karun untuk menjawab soal keamanan jaringan. Jawaban benar membuka harta dan menambah skor.</div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+</div>
+
+<div id="modal">
+ <div class="card">
+  <h2 id="qtitle">Harta Karun</h2>
+  <p id="question"></p>
+  <div class="answers" id="answers"></div>
+  <div id="feedback"></div>
+  <button class="close" onclick="closeModal()">Tutup</button>
+ </div>
+</div>
+
+<script>
+const questions=[
+["Firewall","Apa fungsi utama firewall?","Menyaring lalu lintas jaringan berdasarkan aturan","Memperbesar kapasitas RAM","Membuat baterai awet","Mengganti alamat MAC",0],
+["Malware","Apa yang dimaksud malware?","Program berbahaya yang dapat merusak atau menyalahgunakan sistem","Kabel jaringan","Protokol pencetakan","Jenis monitor",0],
+["Ransomware","Apa ciri ransomware?","Mengenkripsi/menyandera data lalu meminta tebusan","Mempercepat Wi-Fi","Menghapus cache otomatis","Mengatur resolusi layar",0],
+["Antivirus","Apa tujuan antivirus?","Mendeteksi dan membantu menangani perangkat lunak berbahaya","Membuat akun baru","Menambah bandwidth internet","Mengganti ISP",0],
+["Password","Ciri password yang lebih aman adalah...","Panjang, unik, dan sulit ditebak","Nama lengkap sendiri","12345678","Tanggal lahir",0],
+["2FA","Apa arti 2FA?","Verifikasi menggunakan dua faktor","Dua firewall aktif","Dua alamat IP","Dua jaringan Wi-Fi",0],
+["Phishing","Phishing biasanya bertujuan untuk...","Menipu pengguna agar memberikan informasi sensitif","Memperbaiki kabel","Menguatkan sinyal","Mencadangkan foto",0],
+["HTTPS","HTTPS membantu mengamankan komunikasi web dengan...","Enkripsi koneksi antara browser dan server","Menghapus virus dari PC","Mematikan router","Mengubah monitor",0],
+["Enkripsi","Enkripsi adalah proses...","Mengubah data menjadi bentuk yang tidak mudah dibaca tanpa kunci","Menghapus semua data","Menambah RAM","Mempercepat CPU",0],
+["VPN","VPN dapat digunakan untuk...","Membuat koneksi terenkripsi melalui jaringan","Mengganti keyboard","Menghapus firewall","Menambah ukuran hard disk",0],
+["IP Address","IP address berfungsi sebagai...","Alamat logis perangkat pada jaringan","Kata sandi akun","Nama antivirus","Jenis kabel",0],
+["DoS/DDoS","Tujuan serangan DoS/DDoS umumnya adalah...","Membuat layanan sulit atau tidak dapat diakses","Mencadangkan server","Memperkuat password","Memperbarui browser",0],
+["Backup","Mengapa backup penting?","Agar data dapat dipulihkan jika terjadi kerusakan atau kehilangan","Agar Wi-Fi lebih cepat","Agar password terlihat","Agar layar lebih terang",0],
+["Social Engineering","Social engineering mengeksploitasi...","Faktor manusia untuk memperoleh informasi atau akses","Kecepatan CPU","Kapasitas kabel","Ukuran monitor",0],
+["OTP","OTP adalah...","Kode sekali pakai untuk verifikasi","Alamat IP tetap","Jenis firewall","Nama jaringan",0],
+["Wi-Fi Security","Salah satu langkah mengamankan Wi-Fi adalah...","Menggunakan enkripsi modern dan password kuat","Membiarkan password kosong","Memakai password 123456","Membagikan password ke semua orang",0],
+["WPA2/WPA3","WPA2 dan WPA3 berkaitan dengan...","Keamanan jaringan Wi-Fi","Antivirus komputer","Backup cloud","Jenis hard disk",0],
+["IDS","IDS digunakan untuk...","Mendeteksi aktivitas atau pola yang mencurigakan","Mengganti password otomatis","Membuat kabel","Mematikan semua port",0],
+["IPS","Perbedaan umum IPS dengan IDS adalah IPS dapat...","Mendeteksi dan mengambil tindakan untuk memblokir ancaman","Membuat akun media sosial","Menambah RAM","Mengganti monitor",0],
+["Brute Force","Brute force adalah upaya...","Mencoba banyak kombinasi kredensial sampai menemukan yang benar","Mencadangkan data","Mengubah warna website","Mengatur resolusi",0],
+["Port","Dalam jaringan, port membantu...","Mengidentifikasi layanan/aplikasi komunikasi pada perangkat","Menyimpan foto","Mengisi baterai","Mendinginkan CPU",0],
+["Segmentasi Jaringan","Manfaat segmentasi jaringan adalah...","Membatasi penyebaran akses/ancaman dan mengatur lalu lintas antarbagian","Menghapus semua password","Membuat internet gratis","Menambah ukuran monitor",0],
+["Keamanan Akun","Kebiasaan yang membantu menjaga keamanan akun adalah...","Password unik, 2FA, dan tidak membagikan OTP","Membagikan password","Menyimpan OTP di media sosial","Memakai password yang sama di semua akun",0]
+];
+
+let current=null, score=0, found=0, lives=5, opened=new Set();
+
+function openChest(i){
+  if(opened.has(i)) return;
+  current=i; const q=questions[i*5 % questions.length]; // setiap peti membuka salah satu materi; lanjut bisa ditambah
+  showQuestion(q,i);
+}
+function showQuestion(q,i){
+ document.getElementById("modal").style.display="flex";
+ document.getElementById("qtitle").textContent="💎 Harta Karun: "+q[0];
+ document.getElementById("question").textContent=q[1];
+ document.getElementById("feedback").textContent="";
+ const box=document.getElementById("answers"); box.innerHTML="";
+ for(let j=2;j<=5;j++){
+   const b=document.createElement("button"); b.textContent=q[j]; b.onclick=()=>answer(j-2,q,i); box.appendChild(b);
+ }
+}
+function answer(choice,q,i){
+ if(choice===q[5]){
+   score+=100; found++; opened.add(i);
+   document.getElementById("feedback").textContent="✅ Benar! Harta karun berhasil ditemukan.";
+   document.getElementById("feedback").style.color="#8df0a6";
+   document.getElementById("score").textContent=score;
+   document.getElementById("found").textContent=found;
+   document.getElementById("bar").style.width=Math.min(found/23*100,100)+"%";
+   setTimeout(closeModal,900);
+ }else{
+   lives--; document.getElementById("lives").textContent=lives;
+   document.getElementById("feedback").textContent="❌ Belum tepat. Pelajari kembali materinya lalu coba lagi.";
+   document.getElementById("feedback").style.color="#ff9b9b";
+   if(lives<=0){document.getElementById("feedback").textContent="💡 Kesempatan habis. Refresh halaman untuk memulai lagi."}
+ }
+}
+function closeModal(){document.getElementById("modal").style.display="none"}
+</script>
+</body>
+</html>
